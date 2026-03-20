@@ -1,137 +1,98 @@
 "use client";
 
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import PageWrapper from "@/components/dashboard/PageWrapper";
-import StatusBadge from "@/components/dashboard/StatusBadge";
-import { GraduationCap, Building2, AlertTriangle } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 const districts = [
-  {
-    id: 1,
-    name: "Nelson Mandela Bay",
-    description: "Gqeberha / Port Elizabeth",
-    learners: 312,
-    employers: 28,
-    topGap: "Software Development",
-    status: "active" as const,
-  },
-  {
-    id: 2,
-    name: "Buffalo City",
-    description: "East London / King William's Town",
-    learners: 241,
-    employers: 19,
-    topGap: "Plumbing & Waterworks",
-    status: "active" as const,
-  },
-  {
-    id: 3,
-    name: "OR Tambo",
-    description: "Mthatha / Lusikisiki",
-    learners: 198,
-    employers: 11,
-    topGap: "Software Development",
-    status: "active" as const,
-  },
-  {
-    id: 4,
-    name: "Amathole",
-    description: "Bisho / Komani",
-    learners: 147,
-    employers: 9,
-    topGap: "Healthcare (Nursing)",
-    status: "active" as const,
-  },
-  {
-    id: 5,
-    name: "Joe Gqabi",
-    description: "Aliwal North / Barkly East",
-    learners: 54,
-    employers: 4,
-    topGap: "Agriculture & Farming",
-    status: "active" as const,
-  },
-  {
-    id: 6,
-    name: "Sarah Baartman",
-    description: "Graaff-Reinet / Uitenhage",
-    learners: 89,
-    employers: 7,
-    topGap: "Electrical Engineering",
-    status: "active" as const,
-  },
-  {
-    id: 7,
-    name: "Alfred Nzo",
-    description: "Mount Ayliff / Kokstad",
-    learners: 76,
-    employers: 5,
-    topGap: "Construction & Civil",
-    status: "active" as const,
-  },
-  {
-    id: 8,
-    name: "Chris Hani",
-    description: "Queenstown / Cofimvaba",
-    learners: 123,
-    employers: 8,
-    topGap: "ICT Infrastructure",
-    status: "active" as const,
-  },
+  { name: "Nelson Mandela Bay", sub: "Gqeberha / Port Elizabeth", learners: 312, employers: 28, placed: 89,  topGap: "Software Development",   severity: "medium" },
+  { name: "Buffalo City",       sub: "East London / King William's Town", learners: 241, employers: 19, placed: 64,  topGap: "Plumbing & Waterworks",  severity: "medium" },
+  { name: "OR Tambo",           sub: "Mthatha / Lusikisiki",    learners: 198, employers: 11, placed: 27,  topGap: "Software Development",   severity: "high" },
+  { name: "Amathole",           sub: "Bisho / Komani",          learners: 147, employers: 9,  placed: 31,  topGap: "Healthcare (Nursing)",    severity: "high" },
+  { name: "Chris Hani",         sub: "Queenstown / Cofimvaba",  learners: 123, employers: 8,  placed: 22,  topGap: "ICT Infrastructure",      severity: "medium" },
+  { name: "Sarah Baartman",     sub: "Graaff-Reinet / Uitenhage", learners: 89, employers: 7, placed: 18,  topGap: "Electrical Engineering",  severity: "medium" },
+  { name: "Alfred Nzo",         sub: "Mount Ayliff / Kokstad",  learners: 76,  employers: 5,  placed: 9,   topGap: "Construction & Civil",    severity: "high" },
+  { name: "Joe Gqabi",          sub: "Aliwal North / Barkly East", learners: 54, employers: 4, placed: 7,  topGap: "Agriculture & Farming",   severity: "high" },
 ];
 
 export default function SetaDistrictsPage() {
   return (
-    <>
-      <DashboardHeader title="Districts" userName="Thabo Mokoena" notificationCount={5} />
-      <PageWrapper>
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-slate-900">Eastern Cape Districts</h2>
-          <p className="text-sm text-slate-500 mt-0.5">Skills data across all 8 Eastern Cape district municipalities</p>
-        </div>
+    <div className="p-6 space-y-5 bg-[#f7f7f5] min-h-screen">
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {districts.map((district) => (
-            <div key={district.id} className="bg-white border border-slate-200 rounded-sm p-5">
-              <div className="flex items-start justify-between mb-3">
-                <div
-                  className="w-10 h-10 rounded-sm flex items-center justify-center shrink-0"
-                  style={{ background: "linear-gradient(90deg, #34d399, #22d3ee)" }}
-                >
-                  <span className="text-slate-900 font-bold text-xs">{district.name.split(" ").map(w => w[0]).join("").slice(0, 3)}</span>
-                </div>
-                <StatusBadge status={district.status} />
-              </div>
+      {/* Page heading */}
+      <div className="border-b border-gray-200 pb-4">
+        <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">Eastern Cape</p>
+        <h1 className="text-xl font-bold text-slate-900">District Pipeline</h1>
+        <p className="text-sm text-gray-400 mt-0.5">Skills data across all 8 district municipalities</p>
+      </div>
 
-              <h3 className="font-semibold text-slate-900 text-sm mb-0.5">{district.name}</h3>
-              <p className="text-xs text-slate-400 mb-4">{district.description}</p>
+      {/* Summary strip */}
+      <div className="grid grid-cols-3 gap-px bg-gray-200 rounded overflow-hidden">
+        {[
+          { label: "Total learners",  value: districts.reduce((a, d) => a + d.learners, 0).toLocaleString() },
+          { label: "Total employers", value: districts.reduce((a, d) => a + d.employers, 0).toString() },
+          { label: "Critical districts", value: districts.filter(d => d.severity === "high").length.toString(), alert: true },
+        ].map((s) => (
+          <div key={s.label} className="bg-white px-4 py-3">
+            <p className="text-xs text-gray-400 mb-1">{s.label}</p>
+            <p className={`text-2xl font-bold leading-none ${s.alert ? "text-red-600" : "text-slate-900"}`}>{s.value}</p>
+          </div>
+        ))}
+      </div>
 
-              <div className="grid grid-cols-2 gap-2 mb-3">
-                <div className="p-2 bg-slate-50 rounded-sm">
-                  <div className="flex items-center gap-1 text-xs text-slate-500 mb-1">
-                    <GraduationCap size={11} /> Learners
-                  </div>
-                  <p className="text-base font-bold text-slate-900">{district.learners}</p>
-                </div>
-                <div className="p-2 bg-slate-50 rounded-sm">
-                  <div className="flex items-center gap-1 text-xs text-slate-500 mb-1">
-                    <Building2 size={11} /> Employers
-                  </div>
-                  <p className="text-base font-bold text-slate-900">{district.employers}</p>
-                </div>
-              </div>
+      {/* Districts list — card style matching student */}
+      <div className="space-y-3">
+        {districts.map((d) => {
+          const rate = Math.round((d.placed / d.learners) * 100);
+          return (
+            <div key={d.name} className="bg-white border border-gray-200 rounded p-4 space-y-3">
 
-              <div className="flex items-center gap-2 p-2.5 bg-amber-50 border border-amber-100 rounded-sm">
-                <AlertTriangle size={13} className="text-amber-500 shrink-0" />
+              {/* Top row */}
+              <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-[10px] text-amber-600 font-medium uppercase tracking-wide">Top Skill Gap</p>
-                  <p className="text-xs text-amber-800 font-semibold">{district.topGap}</p>
+                  <p className="font-semibold text-slate-900 text-sm">{d.name}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{d.sub}</p>
                 </div>
+                {/* Severity indicator */}
+                <span className={`text-xs font-medium px-2.5 py-1 rounded-full border shrink-0 ${
+                  d.severity === "high"
+                    ? "bg-red-50 text-red-600 border-red-200"
+                    : "bg-amber-50 text-amber-600 border-amber-200"
+                }`}>
+                  {d.severity === "high" ? "Critical gap" : "Moderate gap"}
+                </span>
+              </div>
+
+              {/* Stats row — plain tags like student page */}
+              <div className="flex flex-wrap gap-2">
+                <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-gray-500 border border-gray-200">
+                  {d.learners} learners
+                </span>
+                <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-gray-500 border border-gray-200">
+                  {d.employers} employers
+                </span>
+                <span className={`text-xs px-2 py-0.5 rounded border font-medium ${
+                  rate >= 40
+                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                    : rate >= 20
+                    ? "bg-amber-50 text-amber-700 border-amber-200"
+                    : "bg-red-50 text-red-700 border-red-200"
+                }`}>
+                  {rate}% placed
+                </span>
+              </div>
+
+              {/* Skill gap row */}
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-gray-400">
+                  <span className="font-medium text-gray-500">Top skill gap:</span> {d.topGap}
+                </p>
+                <button className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-emerald-600 transition-colors">
+                  View detail <ArrowUpRight size={11} />
+                </button>
               </div>
             </div>
-          ))}
-        </div>
-      </PageWrapper>
-    </>
+          );
+        })}
+      </div>
+    </div>
   );
 }

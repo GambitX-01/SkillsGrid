@@ -2,104 +2,108 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import PageWrapper from "@/components/dashboard/PageWrapper";
-import StatusBadge from "@/components/dashboard/StatusBadge";
-import { ArrowLeft, Users, TrendingUp, Clock } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
-const programmeData: Record<string, {
-  name: string;
-  nqfLevel: string;
-  duration: string;
-  enrolled: number;
-  placementRate: number;
-  description: string;
-  learners: { id: number; name: string; year: string; status: "active" | "matched" | "approved" | "pending"; matchScore: number }[];
-}> = {
-  "1": {
-    name: "ND: Information Technology",
-    nqfLevel: "NQF Level 6",
-    duration: "3 years",
-    enrolled: 87,
-    placementRate: 74,
-    description: "The National Diploma in Information Technology equips students with practical software development, networking and systems administration skills, aligned to industry demand in the Eastern Cape ICT sector.",
-    learners: [
-      { id: 1, name: "Amahle Dlamini", year: "Year 3", status: "active", matchScore: 94 },
-      { id: 2, name: "Thandeka Mokoena", year: "Year 2", status: "active", matchScore: 72 },
-      { id: 3, name: "Sipho Cele", year: "Year 3", status: "matched", matchScore: 85 },
-      { id: 4, name: "Nomsa Dube", year: "Year 1", status: "pending", matchScore: 55 },
-      { id: 5, name: "Lungelo Nxumalo", year: "Year 3", status: "approved", matchScore: 90 },
-    ],
-  },
-};
+const learners = [
+  { id: 1, initials: "AD", name: "Amahle Dlamini", district: "Gqeberha", matchScore: 94, status: "active" },
+  { id: 2, initials: "TM", name: "Thandeka Mokoena", district: "Gqeberha", matchScore: 72, status: "active" },
+  { id: 3, initials: "SC", name: "Sipho Cele", district: "East London", matchScore: 85, status: "pending" },
+  { id: 4, initials: "ND", name: "Nomsa Dube", district: "Mthatha", matchScore: 55, status: "pending" },
+  { id: 5, initials: "LN", name: "Lungelo Nxumalo", district: "Gqeberha", matchScore: 90, status: "active" },
+  { id: 6, initials: "ZN", name: "Zanele Ntanzi", district: "King William's Town", matchScore: 63, status: "active" },
+];
 
-const fallbackProgramme = {
-  name: "Programme Details",
-  nqfLevel: "NQF Level 6",
-  duration: "3 years",
-  enrolled: 0,
-  placementRate: 0,
-  description: "Programme details loading...",
-  learners: [],
-};
+function matchColor(score: number) {
+  if (score >= 80) return "text-emerald-700";
+  if (score >= 60) return "text-amber-600";
+  return "text-red-500";
+}
+
+function barColor(pct: number) {
+  if (pct >= 70) return "bg-emerald-400";
+  if (pct >= 50) return "bg-amber-400";
+  return "bg-red-400";
+}
+
+function StatusBadge({ status }: { status: string }) {
+  const map: Record<string, string> = {
+    active: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    pending: "bg-amber-50 text-amber-700 border-amber-200",
+    closed: "bg-gray-100 text-gray-500 border-gray-200",
+  };
+  const cls = map[status] ?? "bg-gray-100 text-gray-500 border-gray-200";
+  return (
+    <span className={`text-xs px-2 py-0.5 rounded border ${cls}`}>
+      {status.charAt(0).toUpperCase() + status.slice(1)}
+    </span>
+  );
+}
 
 export default function ProgrammeDetailPage() {
   const params = useParams();
-  const id = typeof params.id === "string" ? params.id : "1";
-  const programme = programmeData[id] ?? fallbackProgramme;
+  void params.id;
+
+  const stats = [
+    { label: "Placed", pct: 74, color: "text-emerald-700", bar: "bg-emerald-400" },
+    { label: "In Pipeline", pct: 18, color: "text-amber-600", bar: "bg-amber-400" },
+    { label: "No Matches Yet", pct: 8, color: "text-red-500", bar: "bg-red-400" },
+  ];
 
   return (
-    <>
-      <DashboardHeader title="Programme Detail" userName="Dr. Noxolo Mthembu" notificationCount={4} />
-      <PageWrapper>
-        <Link href="/institution/programmes" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 mb-6">
-          <ArrowLeft size={15} /> Back to Programmes
-        </Link>
+    <div className="bg-[#f7f7f5] min-h-screen p-6 space-y-5">
+      {/* Back */}
+      <Link href="/institution/programmes" className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-emerald-600 transition-colors">
+        ← Back to programmes
+      </Link>
 
-        {/* Header */}
-        <div className="bg-white border border-slate-200 rounded-sm p-6 mb-6">
-          <h1 className="text-xl font-bold text-slate-900 mb-2">{programme.name}</h1>
-          <div className="flex flex-wrap gap-4 text-sm text-slate-500 mb-4">
-            <span className="flex items-center gap-1.5"><Clock size={14} /> {programme.duration}</span>
-            <span className="flex items-center gap-1.5"><Users size={14} /> {programme.enrolled} enrolled</span>
-            <span className="flex items-center gap-1.5"><TrendingUp size={14} /> {programme.placementRate}% placement rate</span>
-          </div>
-          <p className="text-sm text-slate-600 leading-relaxed">{programme.description}</p>
-        </div>
+      {/* Heading */}
+      <div className="border-b border-gray-200 pb-4">
+        <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">NELSON MANDELA UNIVERSITY</p>
+        <h1 className="text-xl font-bold text-slate-900">Diploma in IT: Systems Development</h1>
+        <p className="text-sm text-gray-400 mt-0.5">NQF 6 · 3-year programme · 89 graduates</p>
+      </div>
 
-        {/* Enrolled learners */}
-        <div className="bg-white border border-slate-200 rounded-sm overflow-hidden">
-          <div className="px-5 py-4 border-b border-slate-100">
-            <h3 className="font-semibold text-slate-900">Enrolled Learners</h3>
-          </div>
-          {programme.learners.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50">
-                    <th className="text-left py-3 px-4 font-semibold text-slate-500 text-xs uppercase tracking-wide">Name</th>
-                    <th className="text-left py-3 px-4 font-semibold text-slate-500 text-xs uppercase tracking-wide">Year</th>
-                    <th className="text-left py-3 px-4 font-semibold text-slate-500 text-xs uppercase tracking-wide">Status</th>
-                    <th className="text-left py-3 px-4 font-semibold text-slate-500 text-xs uppercase tracking-wide">Match Score</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {programme.learners.map((learner) => (
-                    <tr key={learner.id} className="hover:bg-slate-50">
-                      <td className="py-3.5 px-4 font-medium text-slate-900">{learner.name}</td>
-                      <td className="py-3.5 px-4 text-slate-500">{learner.year}</td>
-                      <td className="py-3.5 px-4"><StatusBadge status={learner.status} /></td>
-                      <td className="py-3.5 px-4 font-semibold text-emerald-600">{learner.matchScore}%</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+      {/* Stats strip */}
+      <div className="grid grid-cols-3 gap-px bg-gray-200 rounded overflow-hidden">
+        {stats.map((s) => (
+          <div key={s.label} className="bg-white px-4 py-3">
+            <p className="text-xs text-gray-400 mb-1">{s.label}</p>
+            <p className={`text-2xl font-bold ${s.color}`}>{s.pct}%</p>
+            <div className="mt-2 h-1.5 bg-gray-100 rounded overflow-hidden">
+              <div className={`h-full rounded ${s.bar}`} style={{ width: `${s.pct}%` }} />
             </div>
-          ) : (
-            <p className="p-6 text-sm text-slate-400">No learner data available for this programme.</p>
-          )}
+          </div>
+        ))}
+      </div>
+
+      {/* Enrolled learners */}
+      <div className="bg-white border border-gray-200 rounded">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+          <p className="text-sm font-semibold text-slate-900">Enrolled learners</p>
+          <a href="/institution/learners" className="text-xs text-gray-400 hover:text-emerald-600 flex items-center gap-1 transition-colors">
+            View all <ArrowUpRight size={11} />
+          </a>
         </div>
-      </PageWrapper>
-    </>
+        <div className="divide-y divide-gray-50">
+          {learners.map((l) => (
+            <div key={l.id} className="flex items-center justify-between px-4 py-2.5">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-600 shrink-0">
+                  {l.initials}
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-slate-900">{l.name}</p>
+                  <p className="text-xs text-gray-400">{l.district}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 ml-4 shrink-0">
+                <span className={`text-sm font-bold ${matchColor(l.matchScore)}`}>{l.matchScore}%</span>
+                <StatusBadge status={l.status} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

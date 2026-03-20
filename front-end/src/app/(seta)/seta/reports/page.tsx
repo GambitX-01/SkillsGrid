@@ -1,134 +1,85 @@
 "use client";
 
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import PageWrapper from "@/components/dashboard/PageWrapper";
-import { TrendingUp, MapPin, Banknote, Building2 } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 const reports = [
   {
-    id: 1,
     title: "Top Skills in Demand",
-    description: "AI-ranked skills most sought by Eastern Cape employers, updated quarterly.",
-    icon: TrendingUp,
-    keyStat: "Software Dev #1",
-    statLabel: "Most demanded skill",
-    chartData: [
-      { label: "Software Dev", value: 87 },
-      { label: "Electrical Eng", value: 72 },
-      { label: "Healthcare", value: 68 },
-      { label: "Agriculture", value: 54 },
-      { label: "Finance", value: 49 },
+    sub: "Q1 2026 · Eastern Cape",
+    stats: [
+      { label: "Software Development", value: "312 vacancies" },
+      { label: "ICT Infrastructure",   value: "198 vacancies" },
+      { label: "Healthcare (Nursing)", value: "201 vacancies" },
+      { label: "Electrical Eng.",      value: "145 vacancies" },
     ],
   },
   {
-    id: 2,
     title: "Placement Rates by District",
-    description: "Graduate placement success rates across all 8 Eastern Cape district municipalities.",
-    icon: MapPin,
-    keyStat: "74%",
-    statLabel: "NMB placement rate (highest)",
-    chartData: [
-      { label: "NMB", value: 74 },
-      { label: "Buffalo City", value: 61 },
-      { label: "OR Tambo", value: 48 },
-      { label: "Amathole", value: 43 },
-      { label: "Chris Hani", value: 39 },
+    sub: "Cumulative 2025–2026",
+    stats: [
+      { label: "Nelson Mandela Bay", value: "29% placed" },
+      { label: "Buffalo City",       value: "27% placed" },
+      { label: "OR Tambo",           value: "14% placed" },
+      { label: "Joe Gqabi",          value: "13% placed" },
     ],
   },
   {
-    id: 3,
     title: "Funding Utilisation",
-    description: "Breakdown of SETA grant spending vs. available budget by programme sector.",
-    icon: Banknote,
-    keyStat: "65%",
-    statLabel: "Overall utilisation rate",
-    chartData: [
-      { label: "ICT", value: 71 },
-      { label: "Construction", value: 100 },
-      { label: "Agriculture", value: 20 },
-      { label: "Healthcare", value: 77 },
-      { label: "Engineering", value: 0 },
+    sub: "Budget year 2025–2026",
+    stats: [
+      { label: "Total budget",     value: "R3.2M" },
+      { label: "Disbursed",        value: "R2.4M (75%)" },
+      { label: "In review",        value: "R480k (15%)" },
+      { label: "Unallocated",      value: "R320k (10%)" },
     ],
   },
   {
-    id: 4,
-    title: "Employer Demand Trends",
-    description: "Trends in employer postings and hiring activity on SkillsGrid over the past 12 months.",
-    icon: Building2,
-    keyStat: "+34%",
-    statLabel: "YoY employer growth",
-    chartData: [
-      { label: "Q1 2025", value: 52 },
-      { label: "Q2 2025", value: 63 },
-      { label: "Q3 2025", value: 71 },
-      { label: "Q4 2025", value: 85 },
-      { label: "Q1 2026", value: 89 },
+    title: "Employer Demand",
+    sub: "Active listings · March 2026",
+    stats: [
+      { label: "Total listings",     value: "89 active" },
+      { label: "With AI matching",   value: "67 matched" },
+      { label: "Unfilled > 60 days", value: "23 listings" },
+      { label: "New this month",     value: "14 listings" },
     ],
   },
 ];
 
 export default function SetaReportsPage() {
   return (
-    <>
-      <DashboardHeader title="Reports" userName="Thabo Mokoena" notificationCount={5} />
-      <PageWrapper>
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-slate-900">Regional Skills Reports</h2>
-          <p className="text-sm text-slate-500 mt-0.5">AI-generated insights on the Eastern Cape skills ecosystem</p>
-        </div>
+    <div className="p-6 space-y-5 bg-[#f7f7f5] min-h-screen">
+      <div className="border-b border-gray-200 pb-4">
+        <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">MERSETA</p>
+        <h1 className="text-xl font-bold text-slate-900">Analytics &amp; Reports</h1>
+        <p className="text-sm text-gray-400 mt-0.5">Provincial skills intelligence — Q1 2026</p>
+      </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          {reports.map((report) => {
-            const Icon = report.icon;
-            const maxValue = Math.max(...report.chartData.map((d) => d.value));
-            return (
-              <div key={report.id} className="bg-white border border-slate-200 rounded-sm p-6">
-                <div className="flex items-start gap-3 mb-4">
-                  <div
-                    className="w-10 h-10 rounded-sm flex items-center justify-center shrink-0"
-                    style={{ background: "linear-gradient(90deg, #34d399, #22d3ee)" }}
-                  >
-                    <Icon size={18} className="text-slate-900" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-900">{report.title}</h3>
-                    <p className="text-xs text-slate-500 mt-0.5">{report.description}</p>
-                  </div>
-                </div>
-
-                {/* Key stat */}
-                <div className="mb-4 p-3 bg-slate-50 rounded-sm inline-block">
-                  <p className="text-2xl font-bold text-slate-900">{report.keyStat}</p>
-                  <p className="text-xs text-slate-500">{report.statLabel}</p>
-                </div>
-
-                {/* Placeholder bar chart */}
-                <div className="space-y-2">
-                  {report.chartData.map((item) => (
-                    <div key={item.label} className="flex items-center gap-3">
-                      <span className="text-xs text-slate-500 w-24 shrink-0 truncate">{item.label}</span>
-                      <div className="flex-1 bg-slate-100 rounded-full h-2">
-                        <div
-                          className="h-2 rounded-full transition-all"
-                          style={{
-                            width: `${maxValue > 0 ? (item.value / maxValue) * 100 : 0}%`,
-                            background: "linear-gradient(90deg, #34d399, #22d3ee)",
-                          }}
-                        />
-                      </div>
-                      <span className="text-xs font-medium text-slate-700 w-8 text-right">{item.value}{report.id !== 4 ? "%" : ""}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <button className="mt-4 w-full py-2 rounded-sm text-xs font-medium border border-slate-200 text-slate-600 hover:border-slate-300 transition-colors">
-                  Download Full Report
-                </button>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {reports.map((r) => (
+          <div key={r.title} className="bg-white border border-gray-200 rounded">
+            {/* Card header */}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+              <div>
+                <p className="text-sm font-semibold text-slate-900">{r.title}</p>
+                <p className="text-xs text-gray-400">{r.sub}</p>
               </div>
-            );
-          })}
-        </div>
-      </PageWrapper>
-    </>
+              <button className="text-xs text-gray-400 hover:text-emerald-600 transition-colors">
+                <ArrowUpRight size={14} />
+              </button>
+            </div>
+
+            {/* Data rows */}
+            <div className="divide-y divide-gray-50">
+              {r.stats.map((s) => (
+                <div key={s.label} className="flex items-center justify-between px-4 py-2.5">
+                  <p className="text-sm text-gray-500">{s.label}</p>
+                  <p className="text-sm font-semibold text-slate-800">{s.value}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

@@ -1,90 +1,83 @@
-"use client";
-
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import PageWrapper from "@/components/dashboard/PageWrapper";
-import { Users, CheckCircle2, Bell, AlertCircle } from "lucide-react";
-
 const notifications = [
   {
     id: 1,
-    icon: Users,
-    iconColor: "text-cyan-500",
-    iconBg: "bg-cyan-50",
-    message: "5 new candidates matched to 'Junior Software Developer'.",
-    time: "1 hour ago",
+    dot: "bg-red-500",
+    message: "Luthando Mbeki withdrew their application for Junior Software Developer.",
+    time: "35 min ago",
     read: false,
   },
   {
     id: 2,
-    icon: CheckCircle2,
-    iconColor: "text-emerald-500",
-    iconBg: "bg-emerald-50",
-    message: "Your listing 'ICT Support Technician' has been approved and is now live.",
-    time: "Yesterday",
+    dot: "bg-amber-400",
+    message: "AI match score updated: Amahle Dlamini now scores 91% for IT Support Learnership.",
+    time: "2 hours ago",
     read: false,
   },
   {
     id: 3,
-    icon: AlertCircle,
-    iconColor: "text-amber-500",
-    iconBg: "bg-amber-50",
-    message: "Listing 'Graduate Intern — Data' closes in 10 days.",
+    dot: "bg-emerald-400",
+    message: "3 new applicants submitted for Graduate Intern — Data Analysis.",
+    time: "Yesterday",
+    read: false,
+  },
+  {
+    id: 4,
+    dot: null,
+    message: "Nontobeko Sithole accepted your interview invitation for IT Support Learnership.",
     time: "2 days ago",
     read: true,
   },
   {
-    id: 4,
-    icon: Bell,
-    iconColor: "text-slate-400",
-    iconBg: "bg-slate-100",
-    message: "Nontobeko Sithole accepted your interview invitation.",
+    id: 5,
+    dot: null,
+    message: "Your listing 'Finance Learnership' is under review and will be live within 24 hours.",
     time: "3 days ago",
     read: true,
   },
   {
-    id: 5,
-    icon: Bell,
-    iconColor: "text-slate-400",
-    iconBg: "bg-slate-100",
-    message: "Welcome to SkillsGrid. Complete your company profile to attract better candidates.",
-    time: "1 week ago",
+    id: 6,
+    dot: null,
+    message: "Reminder: 'Junior Software Developer' closes in 7 days. Review remaining applications.",
+    time: "5 days ago",
     read: true,
   },
 ];
 
 export default function EmployerNotificationsPage() {
   return (
-    <>
-      <DashboardHeader title="Notifications" userName="Sipho Ndlovu" notificationCount={2} />
-      <PageWrapper>
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-slate-900">Notifications</h2>
-          <p className="text-sm text-slate-500 mt-0.5">Updates on your listings, candidates and account</p>
-        </div>
+    <div className="bg-[#f7f7f5] min-h-screen p-6 space-y-5">
+      {/* Heading */}
+      <div className="border-b border-gray-200 pb-4">
+        <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">MTN SOUTH AFRICA</p>
+        <h1 className="text-xl font-bold text-slate-900">Notifications</h1>
+        <p className="text-sm text-gray-400 mt-0.5">Updates on listings, applicants and your account</p>
+      </div>
 
-        <div className="space-y-2">
-          {notifications.map((n) => {
-            const Icon = n.icon;
-            return (
-              <div
-                key={n.id}
-                className={`bg-white border rounded-sm p-4 flex items-start gap-4 ${
-                  n.read ? "border-slate-200" : "border-emerald-200 bg-emerald-50/30"
-                }`}
-              >
-                <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${n.iconBg}`}>
-                  <Icon size={16} className={n.iconColor} />
-                </div>
-                <div className="flex-1">
-                  <p className={`text-sm ${n.read ? "text-slate-600" : "text-slate-900 font-medium"}`}>{n.message}</p>
-                  <p className="text-xs text-slate-400 mt-1">{n.time}</p>
-                </div>
-                {!n.read && <div className="w-2 h-2 rounded-full bg-emerald-400 shrink-0 mt-1.5" />}
+      {/* Notification list */}
+      <div className="bg-white border border-gray-200 rounded">
+        <div className="divide-y divide-gray-50">
+          {notifications.map((n) => (
+            <div
+              key={n.id}
+              className={`flex items-start gap-3 px-4 py-3 ${!n.read ? "bg-white" : ""}`}
+            >
+              <div className="mt-1.5 shrink-0">
+                {n.dot ? (
+                  <div className={`w-2 h-2 rounded-full ${n.dot}`} />
+                ) : (
+                  <div className="w-2 h-2 rounded-full bg-gray-200" />
+                )}
               </div>
-            );
-          })}
+              <div className="flex-1">
+                <p className={`text-sm ${n.read ? "text-gray-500" : "text-slate-900 font-medium"}`}>
+                  {n.message}
+                </p>
+                <p className="text-xs text-gray-400 mt-0.5">{n.time}</p>
+              </div>
+            </div>
+          ))}
         </div>
-      </PageWrapper>
-    </>
+      </div>
+    </div>
   );
 }

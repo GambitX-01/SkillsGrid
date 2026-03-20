@@ -1,91 +1,67 @@
 "use client";
 
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import PageWrapper from "@/components/dashboard/PageWrapper";
-import StatusBadge from "@/components/dashboard/StatusBadge";
-import { ExternalLink } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 const applications = [
   {
-    id: 1,
-    opportunity: "Junior Software Developer",
-    organisation: "TechAfrica Solutions",
-    dateApplied: "14 Mar 2026",
-    status: "pending" as const,
+    title: "IT Support Learnership",
+    org: "MTN",
+    date: "12 Mar 2026",
+    status: "Under review",
+    statusColor: "bg-amber-100 text-amber-700 border-amber-200",
   },
   {
-    id: 2,
-    opportunity: "ICT Learnership (NQF 4)",
-    organisation: "Telkom Foundation",
-    dateApplied: "8 Mar 2026",
-    status: "matched" as const,
+    title: "Systems Admin Internship",
+    org: "SITA",
+    date: "8 Mar 2026",
+    status: "Shortlisted",
+    statusColor: "bg-emerald-100 text-emerald-700 border-emerald-200",
   },
   {
-    id: 3,
-    opportunity: "Data Analyst Internship",
-    organisation: "Eastern Cape Development Corp",
-    dateApplied: "1 Mar 2026",
-    status: "approved" as const,
+    title: "ICT Learnership",
+    org: "Vodacom Foundation",
+    date: "1 Mar 2026",
+    status: "Submitted",
+    statusColor: "bg-slate-100 text-slate-600 border-slate-200",
   },
   {
-    id: 4,
-    opportunity: "Graduate Programme — Finance",
-    organisation: "ECDC",
-    dateApplied: "20 Feb 2026",
-    status: "rejected" as const,
-  },
-  {
-    id: 5,
-    opportunity: "Systems Support Technician",
-    organisation: "Border Kei Chamber",
-    dateApplied: "10 Feb 2026",
-    status: "closed" as const,
+    title: "Help Desk Technician",
+    org: "Buffalo City Municipality",
+    date: "20 Feb 2026",
+    status: "Declined",
+    statusColor: "bg-red-100 text-red-600 border-red-200",
   },
 ];
 
-export default function LearnerApplicationsPage() {
+export default function ApplicationsPage() {
   return (
-    <>
-      <DashboardHeader title="Applications" userName="Amahle Dlamini" notificationCount={3} />
-      <PageWrapper>
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-slate-900">My Applications</h2>
-          <p className="text-sm text-slate-500 mt-0.5">Track the status of your submitted applications</p>
-        </div>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <p className="text-sm font-medium text-slate-700">Your applications</p>
+        <span className="text-xs text-gray-400">{applications.length} total</span>
+      </div>
 
-        <div className="bg-white border border-slate-200 rounded-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-slate-200 bg-slate-50">
-                  <th className="text-left py-3 px-4 font-semibold text-slate-600 text-xs uppercase tracking-wide">Opportunity</th>
-                  <th className="text-left py-3 px-4 font-semibold text-slate-600 text-xs uppercase tracking-wide">Organisation</th>
-                  <th className="text-left py-3 px-4 font-semibold text-slate-600 text-xs uppercase tracking-wide">Date Applied</th>
-                  <th className="text-left py-3 px-4 font-semibold text-slate-600 text-xs uppercase tracking-wide">Status</th>
-                  <th className="text-left py-3 px-4 font-semibold text-slate-600 text-xs uppercase tracking-wide">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {applications.map((app) => (
-                  <tr key={app.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="py-3.5 px-4 font-medium text-slate-900">{app.opportunity}</td>
-                    <td className="py-3.5 px-4 text-slate-600">{app.organisation}</td>
-                    <td className="py-3.5 px-4 text-slate-500">{app.dateApplied}</td>
-                    <td className="py-3.5 px-4">
-                      <StatusBadge status={app.status} />
-                    </td>
-                    <td className="py-3.5 px-4">
-                      <button className="inline-flex items-center gap-1.5 text-xs text-emerald-600 hover:text-emerald-500 font-medium">
-                        <ExternalLink size={12} /> View
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      <div className="space-y-3">
+        {applications.map((app) => (
+          <div
+            key={app.title}
+            className="bg-white rounded-lg border border-gray-200 p-4 flex items-center justify-between gap-4"
+          >
+            <div className="min-w-0">
+              <p className="font-semibold text-slate-900 text-sm truncate">{app.title}</p>
+              <p className="text-xs text-gray-400 mt-0.5">{app.org} · Applied {app.date}</p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className={`text-xs font-medium px-2.5 py-1 rounded-full border ${app.statusColor}`}>
+                {app.status}
+              </span>
+              <button className="text-gray-400 hover:text-emerald-500 transition-colors">
+                <ArrowUpRight size={15} />
+              </button>
+            </div>
           </div>
-        </div>
-      </PageWrapper>
-    </>
+        ))}
+      </div>
+    </div>
   );
 }

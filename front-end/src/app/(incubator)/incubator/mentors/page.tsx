@@ -1,107 +1,152 @@
-"use client";
-
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import PageWrapper from "@/components/dashboard/PageWrapper";
-import StatusBadge from "@/components/dashboard/StatusBadge";
-import { MessageSquare } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 const mentors = [
   {
     id: 1,
+    initials: "NO",
     name: "Dr. Nadia Osman",
     expertise: ["AgriTech", "Business Strategy", "Funding"],
-    availability: "active" as const,
+    availability: "active",
     sessions: 24,
-    bio: "PhD in Agricultural Economics. 12 years experience in startup acceleration and rural development.",
   },
   {
     id: 2,
+    initials: "BK",
     name: "Bongani Khumalo",
     expertise: ["Retail", "Supply Chain", "SMME Development"],
-    availability: "active" as const,
+    availability: "active",
     sessions: 18,
-    bio: "Former retail executive turned entrepreneur coach. Expert in township economy activation.",
   },
   {
     id: 3,
+    initials: "SM",
     name: "Sipho Mthembu",
     expertise: ["Software", "Product Design", "Venture Capital"],
-    availability: "active" as const,
+    availability: "active",
     sessions: 31,
-    bio: "Co-founder of two successful African tech startups. Advisor to multiple VC-backed companies.",
   },
   {
     id: 4,
+    initials: "ND",
     name: "Nomsa Dlamini",
     expertise: ["Women Entrepreneurship", "Finance", "Marketing"],
-    availability: "active" as const,
+    availability: "active",
     sessions: 22,
-    bio: "Award-winning businesswoman and advocate for women-led enterprise development in South Africa.",
   },
   {
     id: 5,
+    initials: "TN",
     name: "Thandi Nkosi",
     expertise: ["Creative Industries", "Brand Building", "Digital Media"],
-    availability: "active" as const,
+    availability: "active",
     sessions: 9,
-    bio: "Creative director and business coach specialising in the creative economy across Southern Africa.",
   },
   {
     id: 6,
+    initials: "LJ",
     name: "Luyanda Jacobs",
     expertise: ["Legal", "Compliance", "IP Rights"],
-    availability: "closed" as const,
+    availability: "pending",
     sessions: 14,
-    bio: "Commercial attorney with expertise in startup legal structures, contracts and IP protection.",
+  },
+  {
+    id: 7,
+    initials: "ZM",
+    name: "Zanele Mdlalose",
+    expertise: ["Manufacturing", "Export", "Quality Assurance"],
+    availability: "active",
+    sessions: 11,
+  },
+  {
+    id: 8,
+    initials: "KN",
+    name: "Kwezi Ntombela",
+    expertise: ["Tourism", "Hospitality", "Social Enterprise"],
+    availability: "active",
+    sessions: 7,
   },
 ];
 
+function AvailabilityBadge({ status }: { status: string }) {
+  const map: Record<string, string> = {
+    active: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    pending: "bg-amber-50 text-amber-700 border-amber-200",
+    closed: "bg-gray-100 text-gray-500 border-gray-200",
+  };
+  const labelMap: Record<string, string> = {
+    active: "Available",
+    pending: "On leave",
+    closed: "Unavailable",
+  };
+  const cls = map[status] ?? "bg-gray-100 text-gray-500 border-gray-200";
+  return (
+    <span className={`text-xs px-2 py-0.5 rounded border ${cls}`}>
+      {labelMap[status] ?? status}
+    </span>
+  );
+}
+
 export default function IncubatorMentorsPage() {
   return (
-    <>
-      <DashboardHeader title="Mentors" userName="Zanele Khumalo" notificationCount={2} />
-      <PageWrapper>
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-slate-900">Mentors</h2>
-          <p className="text-sm text-slate-500 mt-0.5">Expert mentors supporting incubator entrepreneurs</p>
+    <div className="bg-[#f7f7f5] min-h-screen p-6 space-y-5">
+      {/* Heading */}
+      <div className="border-b border-gray-200 pb-4">
+        <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">PROPELLA BUSINESS INCUBATOR · GQEBERHA</p>
+        <h1 className="text-xl font-bold text-slate-900">Mentors</h1>
+        <p className="text-sm text-gray-400 mt-0.5">Expert mentors supporting incubator entrepreneurs</p>
+      </div>
+
+      {/* Stats strip */}
+      <div className="grid grid-cols-3 gap-px bg-gray-200 rounded overflow-hidden">
+        <div className="bg-white px-4 py-3">
+          <p className="text-xs text-gray-400 mb-1">Total Mentors</p>
+          <p className="text-2xl font-bold text-slate-900">12</p>
+          <p className="text-xs text-gray-400">on roster</p>
         </div>
+        <div className="bg-white px-4 py-3">
+          <p className="text-xs text-gray-400 mb-1">Available Now</p>
+          <p className="text-2xl font-bold text-slate-900">8</p>
+          <p className="text-xs text-gray-400">accepting sessions</p>
+        </div>
+        <div className="bg-white px-4 py-3">
+          <p className="text-xs text-gray-400 mb-1">Sessions This Month</p>
+          <p className="text-2xl font-bold text-slate-900">34</p>
+          <p className="text-xs text-gray-400">completed</p>
+        </div>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {mentors.map((mentor) => (
-            <div key={mentor.id} className="bg-white border border-slate-200 rounded-sm p-5">
-              <div className="flex items-center gap-3 mb-4">
-                <div
-                  className="w-11 h-11 rounded-full flex items-center justify-center text-slate-900 font-bold shrink-0"
-                  style={{ background: "linear-gradient(90deg, #34d399, #22d3ee)" }}
-                >
-                  {mentor.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)}
+      {/* Mentor list */}
+      <div className="bg-white border border-gray-200 rounded">
+        <div className="px-4 py-3 border-b border-gray-100">
+          <p className="text-sm font-semibold text-slate-900">All mentors</p>
+        </div>
+        <div className="divide-y divide-gray-50">
+          {mentors.map((m) => (
+            <div key={m.id} className="flex items-center justify-between px-4 py-3">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-600 shrink-0">
+                  {m.initials}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-slate-900 text-sm truncate">{mentor.name}</p>
-                  <StatusBadge status={mentor.availability} />
+                <div>
+                  <p className="text-sm font-medium text-slate-900">{m.name}</p>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {m.expertise.map((tag) => (
+                      <span key={tag} className="text-xs px-2 py-0.5 rounded bg-gray-100 text-gray-500 border border-gray-200">{tag}</span>
+                    ))}
+                  </div>
                 </div>
               </div>
-
-              <p className="text-xs text-slate-500 leading-relaxed mb-3">{mentor.bio}</p>
-
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {mentor.expertise.map((tag) => (
-                  <span key={tag} className="text-[11px] px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full border border-slate-200">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-slate-400">{mentor.sessions} sessions completed</span>
-                <button className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 hover:text-emerald-500">
-                  <MessageSquare size={12} /> Contact
-                </button>
+              <div className="flex items-center gap-3 ml-4 shrink-0">
+                <AvailabilityBadge status={m.availability} />
+                <span className="text-xs text-gray-400">{m.sessions} sessions</span>
+                <a className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-emerald-600 transition-colors">
+                  View profile <ArrowUpRight size={11} />
+                </a>
               </div>
             </div>
           ))}
         </div>
-      </PageWrapper>
-    </>
+      </div>
+    </div>
   );
 }

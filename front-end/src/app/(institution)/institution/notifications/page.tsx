@@ -1,90 +1,80 @@
-"use client";
-
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import PageWrapper from "@/components/dashboard/PageWrapper";
-import { GraduationCap, CheckCircle2, Bell, AlertCircle, TrendingUp } from "lucide-react";
-
 const notifications = [
   {
     id: 1,
-    icon: GraduationCap,
-    iconColor: "text-cyan-500",
-    iconBg: "bg-cyan-50",
-    message: "12 final-year IT students have been matched to employer opportunities.",
-    time: "3 hours ago",
+    dot: "bg-red-500",
+    message: "8 final-year IT graduates have no employer match — action required before cohort review.",
+    time: "1 hour ago",
     read: false,
   },
   {
     id: 2,
-    icon: TrendingUp,
-    iconColor: "text-emerald-500",
-    iconBg: "bg-emerald-50",
-    message: "ND: Information Technology programme placement rate reached 74%.",
-    time: "Yesterday",
+    dot: "bg-amber-400",
+    message: "SETA compliance report due in 14 days. Ensure all learner records are submitted.",
+    time: "3 hours ago",
     read: false,
   },
   {
     id: 3,
-    icon: AlertCircle,
-    iconColor: "text-amber-500",
-    iconBg: "bg-amber-50",
-    message: "SETA compliance report due in 14 days. Please ensure all records are submitted.",
-    time: "2 days ago",
+    dot: "bg-emerald-400",
+    message: "Amahle Dlamini matched to MTN IT Support Learnership — fit score 94%.",
+    time: "Yesterday",
     read: false,
   },
   {
     id: 4,
-    icon: CheckCircle2,
-    iconColor: "text-emerald-500",
-    iconBg: "bg-emerald-50",
-    message: "Ayanda Ntuli successfully placed at Eastern Cape Development Corp.",
-    time: "3 days ago",
+    dot: null,
+    message: "ND: Information Technology programme placement rate reached 74% — up from 68% in 2023.",
+    time: "2 days ago",
     read: true,
   },
   {
     id: 5,
-    icon: Bell,
-    iconColor: "text-slate-400",
-    iconBg: "bg-slate-100",
-    message: "New SETA funding round open — applications close 30 April 2026.",
-    time: "5 days ago",
+    dot: null,
+    message: "Programme submission deadline for new BSc Honours track is 30 April 2026.",
+    time: "4 days ago",
+    read: true,
+  },
+  {
+    id: 6,
+    dot: null,
+    message: "New SETA funding round open — applications close 30 April 2026. Review eligibility.",
+    time: "6 days ago",
     read: true,
   },
 ];
 
 export default function InstitutionNotificationsPage() {
   return (
-    <>
-      <DashboardHeader title="Notifications" userName="Dr. Noxolo Mthembu" notificationCount={3} />
-      <PageWrapper>
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-slate-900">Notifications</h2>
-          <p className="text-sm text-slate-500 mt-0.5">Institutional alerts, placements and compliance reminders</p>
-        </div>
+    <div className="bg-[#f7f7f5] min-h-screen p-6 space-y-5">
+      {/* Heading */}
+      <div className="border-b border-gray-200 pb-4">
+        <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">NELSON MANDELA UNIVERSITY</p>
+        <h1 className="text-xl font-bold text-slate-900">Notifications</h1>
+        <p className="text-sm text-gray-400 mt-0.5">Institutional alerts, learner matches and compliance reminders</p>
+      </div>
 
-        <div className="space-y-2">
-          {notifications.map((n) => {
-            const Icon = n.icon;
-            return (
-              <div
-                key={n.id}
-                className={`bg-white border rounded-sm p-4 flex items-start gap-4 ${
-                  n.read ? "border-slate-200" : "border-emerald-200 bg-emerald-50/30"
-                }`}
-              >
-                <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${n.iconBg}`}>
-                  <Icon size={16} className={n.iconColor} />
-                </div>
-                <div className="flex-1">
-                  <p className={`text-sm ${n.read ? "text-slate-600" : "text-slate-900 font-medium"}`}>{n.message}</p>
-                  <p className="text-xs text-slate-400 mt-1">{n.time}</p>
-                </div>
-                {!n.read && <div className="w-2 h-2 rounded-full bg-emerald-400 shrink-0 mt-1.5" />}
+      {/* Notification list */}
+      <div className="bg-white border border-gray-200 rounded">
+        <div className="divide-y divide-gray-50">
+          {notifications.map((n) => (
+            <div key={n.id} className="flex items-start gap-3 px-4 py-3">
+              <div className="mt-1.5 shrink-0">
+                {n.dot ? (
+                  <div className={`w-2 h-2 rounded-full ${n.dot}`} />
+                ) : (
+                  <div className="w-2 h-2 rounded-full bg-gray-200" />
+                )}
               </div>
-            );
-          })}
+              <div className="flex-1">
+                <p className={`text-sm ${n.read ? "text-gray-500" : "text-slate-900 font-medium"}`}>
+                  {n.message}
+                </p>
+                <p className="text-xs text-gray-400 mt-0.5">{n.time}</p>
+              </div>
+            </div>
+          ))}
         </div>
-      </PageWrapper>
-    </>
+      </div>
+    </div>
   );
 }

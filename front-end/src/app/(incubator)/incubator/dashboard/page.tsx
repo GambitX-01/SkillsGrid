@@ -1,89 +1,107 @@
-"use client";
-
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import PageWrapper from "@/components/dashboard/PageWrapper";
-import StatCard from "@/components/dashboard/StatCard";
-import StatusBadge from "@/components/dashboard/StatusBadge";
-import { Layers, Users, Calendar } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 const programmes = [
-  { id: 1, name: "Agri-Tech Startup Accelerator", mentor: "Dr. Nadia Osman", enrolled: 9, status: "active" as const },
-  { id: 2, name: "Township Retail Incubator", mentor: "Bongani Khumalo", enrolled: 14, status: "active" as const },
-  { id: 3, name: "ICT Founders Bootcamp", mentor: "Sipho Mthembu", enrolled: 8, status: "active" as const },
-  { id: 4, name: "Women in Business Programme", mentor: "Nomsa Dlamini", enrolled: 12, status: "active" as const },
+  { id: 1, name: "Agri-Tech Startup Accelerator", sector: "Agriculture", enrolled: 9, status: "active" },
+  { id: 2, name: "Township Retail Incubator", sector: "Retail", enrolled: 14, status: "active" },
+  { id: 3, name: "ICT Founders Bootcamp", sector: "ICT", enrolled: 8, status: "active" },
+  { id: 4, name: "Women in Business Programme", sector: "Business Services", enrolled: 12, status: "active" },
 ];
 
-const events = [
-  { id: 1, title: "Pitch Night — Agri-Tech Cohort", date: "25 Mar 2026", time: "18:00", type: "Pitch" },
-  { id: 2, title: "Mentor Session: Financial Modelling", date: "27 Mar 2026", time: "10:00", type: "Workshop" },
-  { id: 3, title: "ICT Bootcamp Week 3 Kickoff", date: "1 Apr 2026", time: "09:00", type: "Session" },
-  { id: 4, title: "Eastern Cape Startup Expo", date: "15 Apr 2026", time: "08:00", type: "Expo" },
+const sessions = [
+  { id: 1, title: "Pitch Night — Agri-Tech Cohort", date: "25 Mar 2026", mentor: "Dr. Nadia Osman", type: "Pitch" },
+  { id: 2, title: "Mentor Session: Financial Modelling", date: "27 Mar 2026", mentor: "Bongani Khumalo", type: "Workshop" },
+  { id: 3, title: "ICT Bootcamp Week 3 Kickoff", date: "1 Apr 2026", mentor: "Sipho Mthembu", type: "Session" },
+  { id: 4, title: "Eastern Cape Startup Expo", date: "15 Apr 2026", mentor: "All mentors", type: "Expo" },
 ];
+
+function StatusBadge({ status }: { status: string }) {
+  const map: Record<string, string> = {
+    active: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    pending: "bg-amber-50 text-amber-700 border-amber-200",
+    closed: "bg-gray-100 text-gray-500 border-gray-200",
+  };
+  const cls = map[status] ?? "bg-gray-100 text-gray-500 border-gray-200";
+  return (
+    <span className={`text-xs px-2 py-0.5 rounded border ${cls}`}>
+      {status.charAt(0).toUpperCase() + status.slice(1)}
+    </span>
+  );
+}
 
 export default function IncubatorDashboard() {
   return (
-    <>
-      <DashboardHeader title="Dashboard" userName="Zanele Khumalo" notificationCount={2} />
-      <PageWrapper>
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-slate-900">Welcome, Zanele</h2>
-          <p className="text-slate-500 text-sm mt-1">SBEC Incubator — Eastern Cape entrepreneurship hub</p>
-        </div>
+    <div className="bg-[#f7f7f5] min-h-screen p-6 space-y-5">
+      {/* Heading */}
+      <div className="border-b border-gray-200 pb-4">
+        <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">PROPELLA BUSINESS INCUBATOR · GQEBERHA</p>
+        <h1 className="text-xl font-bold text-slate-900">Incubator Dashboard</h1>
+        <p className="text-sm text-gray-400 mt-0.5">Programme activity and upcoming sessions overview</p>
+      </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          <StatCard icon={Layers} label="Active Programmes" value={6} />
-          <StatCard icon={Users} label="Enrolled Entrepreneurs" value={48} change="+6 this month" changeType="positive" />
-          <StatCard icon={Users} label="Mentors Available" value={12} />
+      {/* Stats strip */}
+      <div className="grid grid-cols-3 gap-px bg-gray-200 rounded overflow-hidden">
+        <div className="bg-white px-4 py-3">
+          <p className="text-xs text-gray-400 mb-1">Active Programmes</p>
+          <p className="text-2xl font-bold text-slate-900">6</p>
+          <p className="text-xs text-gray-400">currently running</p>
         </div>
+        <div className="bg-white px-4 py-3">
+          <p className="text-xs text-gray-400 mb-1">Enrolled Entrepreneurs</p>
+          <p className="text-2xl font-bold text-slate-900">48</p>
+          <p className="text-xs text-gray-400">across all programmes</p>
+        </div>
+        <div className="bg-white px-4 py-3">
+          <p className="text-xs text-gray-400 mb-1">Mentors Available</p>
+          <p className="text-2xl font-bold text-slate-900">12</p>
+          <p className="text-xs text-gray-400">active on platform</p>
+        </div>
+      </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          {/* Programmes */}
-          <div className="bg-white border border-slate-200 rounded-sm p-5">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-slate-900">Active Programmes</h3>
-              <a href="/incubator/programmes" className="text-xs text-emerald-600 hover:text-emerald-500 font-medium">View all</a>
-            </div>
-            <div className="space-y-3">
-              {programmes.map((p) => (
-                <div key={p.id} className="flex items-center gap-3 p-3 border border-slate-100 rounded-sm">
-                  <div
-                    className="w-9 h-9 rounded-sm flex items-center justify-center shrink-0"
-                    style={{ background: "linear-gradient(90deg, #34d399, #22d3ee)" }}
-                  >
-                    <Layers size={15} className="text-slate-900" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-slate-900 truncate">{p.name}</p>
-                    <p className="text-xs text-slate-500">{p.enrolled} enrolled · {p.mentor}</p>
-                  </div>
-                  <StatusBadge status={p.status} />
+      {/* Active programmes */}
+      <div className="bg-white border border-gray-200 rounded">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+          <p className="text-sm font-semibold text-slate-900">Active programmes</p>
+          <a href="/incubator/programmes" className="text-xs text-gray-400 hover:text-emerald-600 flex items-center gap-1 transition-colors">
+            View all <ArrowUpRight size={11} />
+          </a>
+        </div>
+        <div className="divide-y divide-gray-50">
+          {programmes.map((p) => (
+            <div key={p.id} className="flex items-center justify-between px-4 py-2.5">
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-slate-900">{p.name}</p>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-gray-500 border border-gray-200">{p.sector}</span>
+                  <span className="text-xs text-gray-400">{p.enrolled} enrolled</span>
                 </div>
-              ))}
+              </div>
+              <div className="ml-4 shrink-0">
+                <StatusBadge status={p.status} />
+              </div>
             </div>
-          </div>
-
-          {/* Upcoming events */}
-          <div className="bg-white border border-slate-200 rounded-sm p-5">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-slate-900">Upcoming Sessions</h3>
-            </div>
-            <div className="space-y-3">
-              {events.map((event) => (
-                <div key={event.id} className="flex items-start gap-3 p-3 border border-slate-100 rounded-sm">
-                  <div className="w-9 h-9 rounded-sm bg-slate-100 flex items-center justify-center shrink-0">
-                    <Calendar size={15} className="text-slate-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-slate-900">{event.title}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">{event.date} at {event.time}</p>
-                    <span className="text-[10px] font-semibold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded-full mt-1 inline-block">{event.type}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
-      </PageWrapper>
-    </>
+      </div>
+
+      {/* Upcoming sessions */}
+      <div className="bg-white border border-gray-200 rounded">
+        <div className="px-4 py-3 border-b border-gray-100">
+          <p className="text-sm font-semibold text-slate-900">Upcoming sessions</p>
+        </div>
+        <div className="divide-y divide-gray-50">
+          {sessions.map((s) => (
+            <div key={s.id} className="flex items-center justify-between px-4 py-2.5">
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-slate-900">{s.title}</p>
+                <p className="text-xs text-gray-400 mt-0.5">{s.date} · {s.mentor}</p>
+              </div>
+              <div className="ml-4 shrink-0">
+                <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-gray-500 border border-gray-200">{s.type}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
