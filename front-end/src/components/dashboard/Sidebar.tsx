@@ -4,24 +4,68 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, LucideIcon } from "lucide-react";
+import {
+  Menu, X, LayoutDashboard, Sparkles, Briefcase, UserCircle,
+  ClipboardList, Bell, PlusCircle, Users, GraduationCap, BookOpen,
+  Map, Banknote, ShieldCheck, BarChart3, Layers, LucideIcon,
+} from "lucide-react";
 
-export interface NavItem {
+type Role = "learner" | "employer" | "institution" | "seta" | "incubator";
+
+interface NavItem {
   label: string;
   href: string;
   icon: LucideIcon;
 }
 
+const NAV_CONFIG: Record<Role, NavItem[]> = {
+  learner: [
+    { label: "Dashboard",     href: "/learner/dashboard",     icon: LayoutDashboard },
+    { label: "My Matches",    href: "/learner/matches",       icon: Sparkles },
+    { label: "Opportunities", href: "/learner/opportunities", icon: Briefcase },
+    { label: "My Profile",    href: "/learner/profile",       icon: UserCircle },
+    { label: "Applications",  href: "/learner/applications",  icon: ClipboardList },
+    { label: "Notifications", href: "/learner/notifications", icon: Bell },
+  ],
+  employer: [
+    { label: "Dashboard",       href: "/employer/dashboard",        icon: LayoutDashboard },
+    { label: "Post Opportunity",href: "/employer/post-opportunity", icon: PlusCircle },
+    { label: "My Listings",     href: "/employer/opportunities",    icon: Briefcase },
+    { label: "Candidates",      href: "/employer/candidates",       icon: Users },
+    { label: "Notifications",   href: "/employer/notifications",    icon: Bell },
+  ],
+  institution: [
+    { label: "Dashboard",     href: "/institution/dashboard",    icon: LayoutDashboard },
+    { label: "Learners",      href: "/institution/learners",     icon: GraduationCap },
+    { label: "Programmes",    href: "/institution/programmes",   icon: BookOpen },
+    { label: "Notifications", href: "/institution/notifications",icon: Bell },
+  ],
+  seta: [
+    { label: "Dashboard",     href: "/seta/dashboard",     icon: LayoutDashboard },
+    { label: "Districts",     href: "/seta/districts",     icon: Map },
+    { label: "Funding",       href: "/seta/funding",       icon: Banknote },
+    { label: "Compliance",    href: "/seta/compliance",    icon: ShieldCheck },
+    { label: "Reports",       href: "/seta/reports",       icon: BarChart3 },
+    { label: "Notifications", href: "/seta/notifications", icon: Bell },
+  ],
+  incubator: [
+    { label: "Dashboard",     href: "/incubator/dashboard",     icon: LayoutDashboard },
+    { label: "Programmes",    href: "/incubator/programmes",    icon: Layers },
+    { label: "Mentors",       href: "/incubator/mentors",       icon: Users },
+    { label: "Notifications", href: "/incubator/notifications", icon: Bell },
+  ],
+};
+
 interface SidebarProps {
-  role: string;
-  navItems: NavItem[];
+  role: Role;
   userName: string;
   userEmail: string;
 }
 
-export default function Sidebar({ role, navItems, userName, userEmail }: SidebarProps) {
+export default function Sidebar({ role, userName, userEmail }: SidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
+  const navItems = NAV_CONFIG[role];
 
   const initials = userName
     .split(" ")
@@ -36,7 +80,11 @@ export default function Sidebar({ role, navItems, userName, userEmail }: Sidebar
       <div className="px-6 py-5 border-b border-slate-800">
         <span
           className="text-xl font-bold tracking-tight"
-          style={{ background: "linear-gradient(90deg, #34d399, #22d3ee)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
+          style={{
+            background: "linear-gradient(90deg, #34d399, #22d3ee)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}
         >
           SkillsGrid
         </span>
@@ -46,7 +94,8 @@ export default function Sidebar({ role, navItems, userName, userEmail }: Sidebar
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+          const isActive =
+            pathname === item.href || pathname.startsWith(item.href + "/");
           return (
             <Link
               key={item.href}
@@ -59,7 +108,11 @@ export default function Sidebar({ role, navItems, userName, userEmail }: Sidebar
               }`}
               style={
                 isActive
-                  ? { background: "linear-gradient(90deg, rgba(52,211,153,0.15), rgba(34,211,238,0.1))", borderLeft: "2px solid #34d399" }
+                  ? {
+                      background:
+                        "linear-gradient(90deg, rgba(52,211,153,0.15), rgba(34,211,238,0.1))",
+                      borderLeft: "2px solid #34d399",
+                    }
                   : {}
               }
             >
@@ -73,7 +126,7 @@ export default function Sidebar({ role, navItems, userName, userEmail }: Sidebar
       {/* Role badge */}
       <div className="px-5 py-4 border-t border-slate-800">
         <span
-          className="inline-block px-3 py-1 text-xs font-semibold text-slate-900 rounded-full"
+          className="inline-block px-3 py-1 text-xs font-semibold text-slate-900 rounded-full capitalize"
           style={{ background: "linear-gradient(90deg, #34d399, #22d3ee)" }}
         >
           {role}
@@ -98,7 +151,7 @@ export default function Sidebar({ role, navItems, userName, userEmail }: Sidebar
 
   return (
     <>
-      {/* Desktop sidebar */}
+      {/* Desktop */}
       <aside className="hidden lg:flex flex-col w-64 shrink-0 h-screen sticky top-0">
         <SidebarContent />
       </aside>
