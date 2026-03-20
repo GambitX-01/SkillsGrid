@@ -6,32 +6,28 @@ import { UserCircle, Brain, CheckCircle2, Rocket } from "lucide-react";
 
 const steps = [
   {
-    step: "01",
     icon: UserCircle,
-    title: "Build Your Profile",
+    title: "Build your profile.",
     description:
-      "Learners complete a structured skills profile — qualifications, experience, location, and availability. Employers and institutions set up their opportunity and programme listings.",
+      "Learners complete a structured skills profile — qualifications, experience, location, availability. Employers and institutions set up their listings.",
   },
   {
-    step: "02",
     icon: Brain,
-    title: "AI Does the Matching",
+    title: "AI does the matching.",
     description:
-      "SkillsGrid's AI engine sends profile data to Google Gemini 2.0 Flash, which analyses fit across all active opportunities and returns match scores with clear reasoning.",
+      "Gemini 2.0 Flash analyses your profile against all active opportunities and returns ranked matches with clear reasoning — no guesswork.",
   },
   {
-    step: "03",
     icon: CheckCircle2,
-    title: "Review Your Matches",
+    title: "Review your matches.",
     description:
-      "Matched opportunities appear ranked on the learner's dashboard. Employers see pre-matched candidates. SETAs see district-level skill gap analytics in real time.",
+      "Opportunities appear ranked on your dashboard. Employers see pre-matched candidates. SETAs see real-time district-level skill gap analytics.",
   },
   {
-    step: "04",
     icon: Rocket,
-    title: "Apply & Track",
+    title: "Apply and track.",
     description:
-      "Apply to opportunities directly through SkillsGrid. Track application status, receive in-app notifications, and stay connected throughout the placement process.",
+      "Apply directly through SkillsGrid. Track your application status and receive in-app notifications throughout the placement process.",
   },
 ];
 
@@ -40,67 +36,82 @@ export default function HowItWorks() {
   const inView = useInView(ref, { once: true });
 
   return (
-    <section id="how-it-works" className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Header */}
+    <section
+      id="how-it-works"
+      className="py-24 relative overflow-hidden"
+      style={{ background: "linear-gradient(150deg, #0f172a 0%, #0f172a 60%, #1e293b 100%)" }}
+    >
+      {/* Dot grid */}
+      <div
+        className="absolute inset-0 opacity-[0.15]"
+        style={{
+          backgroundImage: "radial-gradient(circle, #34d399 1px, transparent 1px)",
+          backgroundSize: "36px 36px",
+        }}
+      />
+
+      {/* SA flag left stripe */}
+      <div className="absolute left-0 top-0 bottom-0 w-1" style={{ backgroundImage: "linear-gradient(to bottom, #34d399, #22d3ee)" }} />
+
+      {/* Ambient glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#34d399]/8 rounded-full blur-3xl" />
+
+      <div className="relative max-w-7xl mx-auto px-10">
+        {/* Section label */}
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-2xl mx-auto mb-20"
+          className="mb-16"
         >
-          <span className="text-[#0D9488] text-sm font-semibold uppercase tracking-widest">
-            How It Works
-          </span>
-          <h2 className="mt-3 text-4xl md:text-5xl font-bold text-[#1B2A4A] leading-tight">
-            Simple for users.
-            <br />
-            Powerful underneath.
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-px w-10" style={{ backgroundImage: "linear-gradient(90deg, #34d399, #22d3ee)" }} />
+            <span className="text-[#67e8f9] text-xs font-bold uppercase tracking-widest">
+              How It Works
+            </span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-white leading-[1.1] max-w-lg">
+            Simple for users.{" "}
+            <span className="text-[#34d399]">Powerful underneath.</span>
           </h2>
         </motion.div>
 
-        {/* Steps */}
-        <div className="relative">
-          {/* Connector line — desktop only */}
-          <div className="hidden lg:block absolute top-10 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent via-[#0D9488]/30 to-transparent" />
+        {/* Steps grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[#34d399]/15 rounded-sm overflow-hidden border border-[#34d399]/15">
+          {steps.map((step, i) => {
+            const ref = useRef(null);
+            const inView = useInView(ref, { once: true, margin: "-40px" });
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {steps.map((step, i) => {
-              const ref = useRef(null);
-              const inView = useInView(ref, { once: true, margin: "-40px" });
-
-              return (
-                <motion.div
-                  key={step.step}
-                  ref={ref}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={inView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.5, delay: i * 0.12 }}
-                  className="flex flex-col items-center text-center"
-                >
-                  {/* Icon circle */}
-                  <div className="relative mb-6">
-                    <div className="w-20 h-20 rounded-2xl bg-[#1B2A4A] flex items-center justify-center shadow-lg">
-                      <step.icon className="text-[#0D9488]" size={28} />
-                    </div>
-                    <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[#0D9488] flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">
-                        {i + 1}
-                      </span>
-                    </div>
+            return (
+              <motion.div
+                key={step.title}
+                ref={ref}
+                initial={{ opacity: 0, y: 24 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="bg-[#0f172a] p-8 flex flex-col gap-5"
+              >
+                {/* Step number + icon */}
+                <div className="flex items-center justify-between">
+                  <div className="w-11 h-11 rounded-sm bg-[#34d399]/15 flex items-center justify-center border border-[#34d399]/20">
+                    <step.icon size={20} className="text-[#34d399]" />
                   </div>
+                  <span className="text-4xl font-black text-white/[0.06]">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </div>
 
-                  <h3 className="font-bold text-[#1B2A4A] text-lg mb-3">
-                    {step.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {step.description}
-                  </p>
-                </motion.div>
-              );
-            })}
-          </div>
+                <div>
+                  <h3 className="font-bold text-white text-base mb-2">{step.title}</h3>
+                  <p className="text-white/45 text-sm leading-relaxed">{step.description}</p>
+                </div>
+
+                {/* Bottom accent */}
+                <div className="mt-auto h-px w-8" style={{ background: i % 2 === 0 ? "#34d399" : "#67e8f9" }} />
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>

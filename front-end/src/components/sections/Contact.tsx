@@ -4,222 +4,200 @@ import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Mail, MapPin, Send, Github } from "lucide-react";
 
+const team = [
+  { name: "Bantu-Bethu Beya", role: "Backend & API · Django + AI" },
+  { name: "Lutho Ngwala", role: "Frontend & UI · Next.js" },
+  { name: "Acxellent Mthombeni", role: "Team GambitX" },
+  { name: "Thapelo Sithole", role: "Team GambitX" },
+];
+
 export default function Contact() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
 
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    organisation: "",
-    message: "",
-  });
+  const [form, setForm] = useState({ name: "", email: "", organisation: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
 
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // Backend integration pending — form data will POST to Django API
+    // Backend integration pending — will POST to Django API once published
     setSubmitted(true);
   }
 
   return (
-    <section id="contact" className="py-24 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Header */}
+    <section
+      id="contact"
+      className="py-24 relative overflow-hidden"
+      style={{ background: "linear-gradient(150deg, #0f172a 0%, #0f172a 60%, #1e293b 100%)" }}
+    >
+      {/* Dot grid */}
+      <div
+        className="absolute inset-0 opacity-[0.15]"
+        style={{
+          backgroundImage: "radial-gradient(circle, #34d399 1px, transparent 1px)",
+          backgroundSize: "36px 36px",
+        }}
+      />
+
+      {/* SA flag left stripe */}
+      <div className="absolute left-0 top-0 bottom-0 w-1" style={{ backgroundImage: "linear-gradient(to bottom, #34d399, #22d3ee)" }} />
+
+      {/* Ambient glow */}
+      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#34d399]/8 rounded-full blur-3xl" />
+
+      <div className="relative max-w-7xl mx-auto px-10">
+        {/* Section label */}
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-2xl mx-auto mb-16"
+          className="mb-14"
         >
-          <span className="text-[#0D9488] text-sm font-semibold uppercase tracking-widest">
-            Get in Touch
-          </span>
-          <h2 className="mt-3 text-4xl md:text-5xl font-bold text-[#1B2A4A] leading-tight">
-            Interested in SkillsGrid?
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-px w-10" style={{ backgroundImage: "linear-gradient(90deg, #34d399, #22d3ee)" }} />
+            <span className="text-[#67e8f9] text-xs font-bold uppercase tracking-widest">
+              Get in Touch
+            </span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-white leading-[1.1] max-w-lg">
+            Interested in{" "}
+            <span className="text-[#34d399]">SkillsGrid?</span>
           </h2>
-          <p className="mt-6 text-gray-600 text-lg">
-            Whether you&apos;re a SETA, institution, employer, or incubator —
-            reach out and we&apos;ll connect you to the platform.
+          <p className="mt-4 text-white/50 text-base max-w-md leading-relaxed">
+            Whether you&apos;re a SETA, institution, employer, or incubator — reach out and
+            we&apos;ll connect you to the platform.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
-          {/* Left: Info */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
+          {/* Left: contact info */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="lg:col-span-2 space-y-8"
+            className="lg:col-span-2 space-y-6"
           >
-            <div>
-              <h3 className="text-xl font-bold text-[#1B2A4A] mb-6">
-                Contact Information
-              </h3>
-              <div className="space-y-5">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#0D9488]/10 flex items-center justify-center flex-shrink-0">
-                    <Mail size={18} className="text-[#0D9488]" />
+            {/* Contact details */}
+            <div className="space-y-4">
+              {[
+                { icon: Mail, label: "Email", value: "team@skillsgrid.co.za", href: null },
+                {
+                  icon: MapPin,
+                  label: "Location",
+                  value: "Propella Business Incubator\nWalmer, Port Elizabeth\nEastern Cape, SA",
+                  href: null,
+                },
+                {
+                  icon: Github,
+                  label: "GitHub",
+                  value: "github.com/GambitX-01/sicillian",
+                  href: "https://github.com/GambitX-01/sicillian",
+                },
+              ].map(({ icon: Icon, label, value, href }) => (
+                <div key={label} className="flex items-start gap-4">
+                  <div className="w-9 h-9 rounded-sm bg-[#34d399]/15 border border-[#34d399]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Icon size={16} className="text-[#34d399]" />
                   </div>
                   <div>
-                    <div className="text-sm text-gray-400 mb-0.5">Email</div>
-                    <div className="text-[#1B2A4A] font-medium">
-                      team@skillsgrid.co.za
-                    </div>
+                    <p className="text-white/35 text-xs uppercase tracking-wider mb-0.5">{label}</p>
+                    {href ? (
+                      <a href={href} target="_blank" rel="noopener noreferrer"
+                        className="text-[#67e8f9] text-sm hover:underline underline-offset-4">
+                        {value}
+                      </a>
+                    ) : (
+                      <p className="text-white/75 text-sm whitespace-pre-line">{value}</p>
+                    )}
                   </div>
                 </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#0D9488]/10 flex items-center justify-center flex-shrink-0">
-                    <MapPin size={18} className="text-[#0D9488]" />
-                  </div>
-                  <div>
-                    <div className="text-sm text-gray-400 mb-0.5">Location</div>
-                    <div className="text-[#1B2A4A] font-medium">
-                      Propella Business Incubator
-                      <br />
-                      Walmer, Port Elizabeth
-                      <br />
-                      Eastern Cape, South Africa
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#0D9488]/10 flex items-center justify-center flex-shrink-0">
-                    <Github size={18} className="text-[#0D9488]" />
-                  </div>
-                  <div>
-                    <div className="text-sm text-gray-400 mb-0.5">
-                      Open Source
-                    </div>
-                    <a
-                      href="https://github.com/GambitX-01/sicillian"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#0D9488] font-medium hover:underline"
-                    >
-                      github.com/GambitX-01/sicillian
-                    </a>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
 
-            {/* Team */}
-            <div className="p-6 rounded-2xl bg-[#1B2A4A] text-white">
-              <p className="text-white/50 text-xs uppercase tracking-wider mb-1">
-                Built by
-              </p>
-              <p className="text-[#0D9488] font-bold text-lg mb-4">Team GambitX</p>
-              <div className="space-y-3">
-                <div>
-                  <div className="font-semibold">Bantu-Bethu Beya</div>
-                  <div className="text-[#0D9488] text-sm">
-                    Backend & API — Django + AI Integration
+            {/* Team block */}
+            <div className="border border-[#34d399]/25 rounded-sm overflow-hidden">
+              <div className="px-5 py-3 bg-[#34d399]/10 border-b border-[#34d399]/20">
+                <p className="text-[#67e8f9] text-xs font-bold uppercase tracking-widest">
+                  Team GambitX
+                </p>
+              </div>
+              <div className="divide-y divide-[#34d399]/15">
+                {team.map((member) => (
+                  <div key={member.name} className="px-5 py-3.5">
+                    <p className="text-white text-sm font-semibold">{member.name}</p>
+                    <p className="text-white/40 text-xs mt-0.5">{member.role}</p>
                   </div>
-                </div>
-                <div>
-                  <div className="font-semibold">Lutho Ngwala</div>
-                  <div className="text-[#0D9488] text-sm">
-                    Frontend & UI — Next.js
-                  </div>
-                </div>
-                <div>
-                  <div className="font-semibold">Acxellent Mthombeni</div>
-                  <div className="text-[#0D9488] text-sm">
-                    Team GambitX
-                  </div>
-                </div>
-                <div>
-                  <div className="font-semibold">Thapelo Sithole</div>
-                  <div className="text-[#0D9488] text-sm">
-                    Team GambitX
-                  </div>
-                </div>
-                <div className="pt-2 border-t border-white/10 text-white/40 text-xs">
-                  Nelson Mandela University · GambitX · Gqeberha
-                </div>
+                ))}
+              </div>
+              <div className="px-5 py-3 bg-[#34d399]/5 border-t border-[#34d399]/15">
+                <p className="text-white/25 text-xs">
+                  Nelson Mandela University · Bay Software · Gqeberha
+                </p>
               </div>
             </div>
           </motion.div>
 
-          {/* Right: Form */}
+          {/* Right: form */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="lg:col-span-3"
           >
             {submitted ? (
-              <div className="h-full flex flex-col items-center justify-center text-center py-20 rounded-2xl bg-white border border-gray-100">
-                <div className="w-16 h-16 rounded-full bg-[#0D9488]/10 flex items-center justify-center mb-4">
-                  <Send className="text-[#0D9488]" size={28} />
+              <div className="h-full flex flex-col items-center justify-center text-center py-20 border border-[#34d399]/25 rounded-sm bg-[#34d399]/5">
+                <div className="w-14 h-14 rounded-sm bg-[#34d399]/20 border border-[#34d399]/30 flex items-center justify-center mb-4">
+                  <Send className="text-[#34d399]" size={24} />
                 </div>
-                <h3 className="text-2xl font-bold text-[#1B2A4A] mb-2">
-                  Message received!
-                </h3>
-                <p className="text-gray-500">
-                  We&apos;ll be in touch shortly.
-                </p>
+                <h3 className="text-xl font-bold text-white mb-2">Message received.</h3>
+                <p className="text-white/40 text-sm">We&apos;ll be in touch shortly.</p>
               </div>
             ) : (
               <form
                 onSubmit={handleSubmit}
-                className="bg-white rounded-2xl border border-gray-100 p-8 space-y-5 shadow-sm"
+                className="border border-[#34d399]/20 rounded-sm bg-[#0f172a]/60 backdrop-blur-sm p-8 space-y-5"
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-gray-700">
-                      Full Name
-                    </label>
-                    <input
-                      name="name"
-                      value={form.name}
-                      onChange={handleChange}
-                      required
-                      placeholder="Your full name"
-                      className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] transition"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-gray-700">
-                      Email Address
-                    </label>
-                    <input
-                      name="email"
-                      type="email"
-                      value={form.email}
-                      onChange={handleChange}
-                      required
-                      placeholder="you@organisation.co.za"
-                      className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] transition"
-                    />
-                  </div>
+                  {[
+                    { name: "name", label: "Full Name", placeholder: "Your full name", type: "text" },
+                    { name: "email", label: "Email", placeholder: "you@organisation.co.za", type: "email" },
+                  ].map((field) => (
+                    <div key={field.name} className="space-y-1.5">
+                      <label className="text-white/50 text-xs font-bold uppercase tracking-wider">
+                        {field.label}
+                      </label>
+                      <input
+                        name={field.name}
+                        type={field.type}
+                        value={form[field.name as keyof typeof form]}
+                        onChange={handleChange}
+                        required
+                        placeholder={field.placeholder}
+                        className="w-full px-4 py-2.5 rounded-sm bg-white/5 border border-[#34d399]/25 text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-[#34d399]/60 transition"
+                      />
+                    </div>
+                  ))}
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-gray-700">
-                    Organisation / Institution
+                  <label className="text-white/50 text-xs font-bold uppercase tracking-wider">
+                    Organisation
                   </label>
                   <input
                     name="organisation"
                     value={form.organisation}
                     onChange={handleChange}
                     placeholder="e.g. MERSETA, Buffalo City TVET, Bay Software"
-                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] transition"
+                    className="w-full px-4 py-2.5 rounded-sm bg-white/5 border border-[#34d399]/25 text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-[#34d399]/60 transition"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-gray-700">
+                  <label className="text-white/50 text-xs font-bold uppercase tracking-wider">
                     Message
                   </label>
                   <textarea
@@ -228,21 +206,20 @@ export default function Contact() {
                     onChange={handleChange}
                     required
                     rows={5}
-                    placeholder="Tell us how you'd like to use SkillsGrid, or ask us anything..."
-                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] transition resize-none"
+                    placeholder="Tell us how you'd like to use SkillsGrid..."
+                    className="w-full px-4 py-2.5 rounded-sm bg-white/5 border border-[#34d399]/25 text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-[#34d399]/60 transition resize-none"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#0D9488] hover:bg-[#0f766e] text-white font-semibold transition-colors duration-200"
+                  style={{ backgroundImage: "linear-gradient(90deg, #34d399, #22d3ee)" }} className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-sm text-slate-900 text-sm font-bold uppercase tracking-wide transition-opacity hover:opacity-90"
                 >
-                  Send Message <Send size={16} />
+                  Send Message <Send size={14} />
                 </button>
 
-                <p className="text-center text-xs text-gray-400">
-                  Backend integration coming soon. Form data will be sent via
-                  Django API.
+                <p className="text-center text-white/20 text-xs">
+                  Backend integration pending · Will connect to Django API on publish
                 </p>
               </form>
             )}
