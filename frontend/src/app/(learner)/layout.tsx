@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 
 const tabs = [
   { label: "My matches",   href: "/learner/matches" },
+  { label: "Opportunities",href: "/learner/opportunities" },
   { label: "Applications", href: "/learner/applications" },
   { label: "My profile",   href: "/learner/profile" },
   { label: "Skills",       href: "/learner/skills" },

@@ -2,6 +2,11 @@
 
 import { useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
+import { useApi } from "@/hooks/useApi";
+import { useAuth } from "@/context/AuthContext";
+import type { GapAlert, LearnerProfile, Opportunity } from "@/types";
+
+const SETA_DEMO_EMAIL = "seta@demo.co.za";
 
 // ── Demo data ───────────────────────────────────────────────────────────────
 
@@ -58,6 +63,13 @@ function Pills({ options, value, onChange }: { options: string[]; value: string;
 // ── Page ────────────────────────────────────────────────────────────────────
 
 export default function SetaDashboard() {
+  const { user } = useAuth();
+  const isDemo = user?.email === SETA_DEMO_EMAIL;
+
+  const { data: apiAlerts,   loading: lAlerts }   = useApi<GapAlert[]>(isDemo ? null : "/gap-alerts/");
+  const { data: apiProfiles, loading: lProfiles } = useApi<LearnerProfile[]>(isDemo ? null : "/learner-profiles/");
+  const { data: apiOpps,     loading: lOpps }     = useApi<Opportunity[]>(isDemo ? null : "/opportunities/");
+
   // District pipeline filters
   const [districtSort, setDistrictSort] = useState("Learners ↓");
   const [districtSearch, setDistrictSearch] = useState("");
@@ -66,6 +78,87 @@ export default function SetaDashboard() {
   const [alertSeverity, setAlertSeverity] = useState("All");
   const [alertDistrict, setAlertDistrict] = useState("All");
   const [alertSort, setAlertSort] = useState("Gap size ↓");
+
+  // ── Real API branch ───────────────────────────────────────────────────
+  if (!isDemo) {
+    const loading = lAlerts || lProfiles || lOpps;
+    const totalL  = (apiProfiles ?? []).length;
+    const activeE = new Set((apiOpps ?? []).map(o => o.employer)).size;
+    const gapCount = (apiAlerts ?? []).filter(a => a.status === "open").length;
+    const distMap = new Map<string, { learners: number; placed: number }>();
+    for (const p of apiProfiles ?? []) {
+      const prev = distMap.get(p.district) ?? { learners: 0, placed: 0 };
+      distMap.set(p.district, { learners: prev.learners + 1, placed: prev.placed + (p.status === "placed" ? 1 : 0) });
+    }
+    const distStats = [...distMap.entries()].map(([district, d]) => ({ district, ...d })).sort((a, b) => b.learners - a.learners);
+    const openA = (apiAlerts ?? []).filter(a => a.status === "open");
+    return (
+      <div className="p-6 space-y-6 bg-[#f7f7f5] min-h-screen">
+        <div className="border-b border-gray-200 pb-4">
+          <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">MERSETA — Eastern Cape</p>
+          <h1 className="text-xl font-bold text-slate-900">Skills Development Overview</h1>
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-gray-200 rounded overflow-hidden">
+          {[
+            { label: "Registered learners", val: loading ? "—" : totalL.toLocaleString(), sub: "on platform" },
+            { label: "Active employers",     val: loading ? "—" : activeE,                sub: "with open listings" },
+            { label: "Skill gap alerts",     val: loading ? "—" : gapCount,               sub: "open alerts", red: gapCount > 0 },
+            { label: "Open opportunities",   val: loading ? "—" : (apiOpps ?? []).filter(o => o.status === "open").length, sub: "listings available" },
+          ].map(({ label, val, sub, red }) => (
+            <div key={label} className="bg-white px-4 py-4">
+              <p className="text-xs text-gray-400 mb-1">{label}</p>
+              <p className={`text-2xl font-bold leading-none mb-1 ${red ? "text-red-600" : "text-slate-900"}`}>{val}</p>
+              <p className={`text-xs ${red ? "text-red-400" : "text-gray-400"}`}>{sub}</p>
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
+          <div className="bg-white border border-gray-200 rounded">
+            <div className="px-4 py-3 border-b border-gray-100"><p className="text-sm font-semibold text-slate-900">Skill gap alerts</p></div>
+            {openA.length === 0 ? <p className="text-sm text-gray-400 text-center py-8">No open gap alerts.</p> : (
+              <div className="divide-y divide-gray-50">
+                {openA.map(alert => (
+                  <div key={alert.id} className="flex items-center gap-3 px-4 py-3">
+                    <div className={`w-2 h-2 rounded-full shrink-0 ${severityDot(alert.alert_type)}`} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-slate-800 font-medium truncate">{alert.detail}</p>
+                      <p className="text-xs text-gray-400">{alert.district}</p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-sm font-bold text-slate-700">{alert.learners_ready - alert.learners_placed}</p>
+                      <p className="text-xs text-gray-400">gap</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="bg-white border border-gray-200 rounded">
+            <div className="px-4 py-3 border-b border-gray-100"><p className="text-sm font-semibold text-slate-900">District pipeline</p></div>
+            <div className="grid grid-cols-4 px-4 py-2 border-b border-gray-100 bg-gray-50">
+              {["District","","Learners","Placed"].map((h,i) => <p key={i} className={`text-xs font-medium text-gray-400 ${i > 1 ? "text-right" : ""} ${i === 0 ? "col-span-2" : ""}`}>{h}</p>)}
+            </div>
+            {distStats.length === 0 ? <p className="text-sm text-gray-400 text-center py-8">No learner data yet.</p> : (
+              <div className="divide-y divide-gray-50">
+                {distStats.map(d => {
+                  const rate = d.learners > 0 ? Math.round((d.placed / d.learners) * 100) : 0;
+                  return (
+                    <div key={d.district} className="grid grid-cols-4 items-center px-4 py-2.5 hover:bg-gray-50">
+                      <p className="text-sm text-slate-700 col-span-2 truncate">{d.district}</p>
+                      <p className="text-sm text-slate-700 text-right font-medium">{d.learners}</p>
+                      <span className={`text-xs font-semibold text-right ${rateColor(rate)}`}>{rate}%</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Demo branch ────────────────────────────────────────────────────────
 
   // ── Stats ─────────────────────────────────────────────────────────────
   const totalLearners   = DEMO_DISTRICTS.reduce((s, d) => s + d.learners, 0);
